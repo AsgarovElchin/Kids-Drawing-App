@@ -4,7 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/elcin/AndroidStudioProjects/KidsDrawingApp/app/src/main/res/drawable/drawing_view_background.xml" value="0.1075" />
+        <entry key="..\:/Users/elcin/AndroidStudioProjects/KidsDrawingApp/app/src/main/res/drawable/large.xml" value="0.1" />
+        <entry key="..\:/Users/elcin/AndroidStudioProjects/KidsDrawingApp/app/src/main/res/drawable/medium.xml" value="0.1" />
+        <entry key="..\:/Users/elcin/AndroidStudioProjects/KidsDrawingApp/app/src/main/res/drawable/small.xml" value="0.1" />
         <entry key="..\:/Users/elcin/AndroidStudioProjects/KidsDrawingApp/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/elcin/AndroidStudioProjects/KidsDrawingApp/app/src/main/res/layout/dialog_brush_size.xml" value="0.1" />
       </map>
     </option>
   </component>
