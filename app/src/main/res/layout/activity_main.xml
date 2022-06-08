@@ -28,6 +28,7 @@
         app:layout_constraintTop_toBottomOf="@id/drawing_view">
 
         <ImageButton
+            android:onClick="paintClicked"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="2dp"
@@ -36,6 +37,7 @@
             android:tag="@color/black" />
 
         <ImageButton
+            android:onClick="paintClicked"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="2dp"
@@ -44,6 +46,7 @@
             android:tag="@color/lollipop" />
 
         <ImageButton
+            android:onClick="paintClicked"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="2dp"
@@ -52,6 +55,7 @@
             android:tag="@color/skin" />
 
         <ImageButton
+            android:onClick="paintClicked"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="2dp"
@@ -60,6 +64,7 @@
             android:tag="@color/red" />
 
         <ImageButton
+            android:onClick="paintClicked"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="2dp"
@@ -68,6 +73,7 @@
             android:tag="@color/yellow" />
 
         <ImageButton
+            android:onClick="paintClicked"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="2dp"
@@ -76,6 +82,7 @@
             android:tag="@color/blue" />
 
         <ImageButton
+            android:onClick="paintClicked"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="2dp"
@@ -84,6 +91,7 @@
             android:tag="@color/green" />
 
         <ImageButton
+            android:onClick="paintClicked"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="2dp"

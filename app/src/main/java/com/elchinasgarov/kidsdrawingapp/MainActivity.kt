@@ -2,8 +2,10 @@ package com.elchinasgarov.kidsdrawingapp
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
@@ -12,7 +14,7 @@ import com.elchinasgarov.kidsdrawingapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private var drawingView: DrawingView? = null
-    private var mImageButtonCurrentPath : ImageButton? = null
+    private var mImageButtonCurrentPaint : ImageButton? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,8 +24,8 @@ class MainActivity : AppCompatActivity() {
         drawingView = findViewById(R.id.drawing_view)
 
         val linearLayout = findViewById<LinearLayout>(R.id.linear_layout_colors)
-        mImageButtonCurrentPath = linearLayout[1] as ImageButton
-        mImageButtonCurrentPath!!.setImageDrawable(
+        mImageButtonCurrentPaint = linearLayout[1] as ImageButton
+        mImageButtonCurrentPaint!!.setImageDrawable(
             ContextCompat.getDrawable(this,R.drawable.selected_colors)
         )
         val brush: ImageButton = findViewById(R.id.brush_btn)
@@ -58,5 +60,21 @@ class MainActivity : AppCompatActivity() {
         }
 
         brushDialog.show()
+    }
+
+    fun paintClicked(view:View){
+       if(view!=mImageButtonCurrentPaint){
+           val imageButton = view as ImageButton
+           val colorTag = imageButton.tag.toString()
+           drawingView?.setColor(colorTag)
+
+           imageButton.setImageDrawable(
+               ContextCompat.getDrawable(this,R.drawable.selected_colors)
+           )
+           mImageButtonCurrentPaint?.setImageDrawable(
+               ContextCompat.getDrawable(this,R.drawable.pallet_normal)
+           )
+           mImageButtonCurrentPaint = view
+       }
     }
 }
