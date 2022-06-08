@@ -3,17 +3,29 @@ package com.elchinasgarov.kidsdrawingapp
 import android.app.Dialog
 import android.os.Bundle
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import com.elchinasgarov.DrawingView
 import com.elchinasgarov.kidsdrawingapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private var drawingView: DrawingView? = null
+    private var mImageButtonCurrentPath : ImageButton? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         drawingView = findViewById(R.id.drawing_view)
+
+        val linearLayout = findViewById<LinearLayout>(R.id.linear_layout_colors)
+        mImageButtonCurrentPath = linearLayout[1] as ImageButton
+        mImageButtonCurrentPath!!.setImageDrawable(
+            ContextCompat.getDrawable(this,R.drawable.selected_colors)
+        )
         val brush: ImageButton = findViewById(R.id.brush_btn)
         brush.setOnClickListener {
             showBrushChooserDialog()
