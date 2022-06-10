@@ -23,13 +23,13 @@ import com.elchinasgarov.kidsdrawingapp.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private var drawingView: DrawingView? = null
     private var mImageButtonCurrentPaint: ImageButton? = null
-    val openGalleryLauncher : ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-        result->
-        if(result.resultCode == RESULT_OK && result.data!=null){
-            val imageBackGround : ImageView = findViewById(R.id.iv_background)
-            imageBackGround.setImageURI(result.data?.data)
+    val openGalleryLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK && result.data != null) {
+                val imageBackGround: ImageView = findViewById(R.id.iv_background)
+                imageBackGround.setImageURI(result.data?.data)
+            }
         }
-    }
     val requestPermission: ActivityResultLauncher<Array<String>> =
         registerForActivityResult((ActivityResultContracts.RequestMultiplePermissions())) { permissions ->
             permissions.entries.forEach {
@@ -42,7 +42,8 @@ class MainActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
 
-                    val pickIntent = Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    val pickIntent =
+                        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                     openGalleryLauncher.launch(pickIntent)
 
                 } else {
@@ -78,6 +79,10 @@ class MainActivity : AppCompatActivity() {
         val importButton: ImageButton = findViewById(R.id.import_btn)
         importButton.setOnClickListener {
             requestStoragePermission()
+        }
+        val undo: ImageButton = findViewById(R.id.undo_btn)
+        undo.setOnClickListener {
+            drawingView?.onClickUndo()
         }
 
 
