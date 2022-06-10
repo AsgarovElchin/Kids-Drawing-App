@@ -4,24 +4,29 @@ import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
+import androidx.lifecycle.lifecycleScope
 import com.elchinasgarov.DrawingView
 import com.elchinasgarov.kidsdrawingapp.databinding.ActivityMainBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
     private var drawingView: DrawingView? = null
@@ -87,9 +92,20 @@ class MainActivity : AppCompatActivity() {
         undo.setOnClickListener {
             drawingView?.onClickUndo()
         }
+        val save: ImageButton = findViewById(R.id.save_btn)
+        save.setOnClickListener {
+            if(isReadStorageAllowed()){
+                lifecycleScope.launch {
+                    val flDrawingView : FrameLayout = findViewById(R.id.fl_drawing_view_container)
+                    saveBitmapFile(getBitmapFromView(flDrawingView))
+
+                } }
+            }
+
+        }
 
 
-    }
+
 
     private fun showBrushChooserDialog() {
         val brushDialog = Dialog(this)
@@ -117,6 +133,15 @@ class MainActivity : AppCompatActivity() {
         brushDialog.show()
     }
 
+    private fun isReadStorageAllowed(): Boolean {
+        val result = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+
+            )
+        return result == PackageManager.PERMISSION_GRANTED
+    }
+
     private fun requestStoragePermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 this, Manifest.permission.READ_EXTERNAL_STORAGE
@@ -130,7 +155,8 @@ class MainActivity : AppCompatActivity() {
         } else {
             requestPermission.launch(
                 arrayOf(
-                    Manifest.permission.READ_EXTERNAL_STORAGE
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
                 )
             )
         }
@@ -153,6 +179,51 @@ class MainActivity : AppCompatActivity() {
         view.draw(canvas)
         return returnedBitmap
     }
+
+    private suspend fun saveBitmapFile(mBitmap: Bitmap?): String {
+        var result = ""
+        withContext(Dispatchers.IO) {
+            if (mBitmap != null) {
+                try {
+                    val bytes = ByteArrayOutputStream()
+                    mBitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
+
+                    val file = File(
+                        externalCacheDir?.absoluteFile.toString() +
+                                File.separator + "KidsDrawingApp_" + System.currentTimeMillis() / 1000 + ".png"
+                    )
+                    val fileOutput = FileOutputStream(file)
+                    fileOutput.write(bytes.toByteArray())
+                    fileOutput.close()
+                    result = file.absolutePath
+
+                    runOnUiThread {
+                        if (result.isNotEmpty()) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "File saved successfully : $result",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Something went wrong while saving the file",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+
+                    }
+                } catch (e: Exception) {
+                    result = ""
+                    e.printStackTrace()
+                }
+            }
+
+        }
+        return result
+    }
+
 
     private fun showRationableDialog(title: String, messag: String) {
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
