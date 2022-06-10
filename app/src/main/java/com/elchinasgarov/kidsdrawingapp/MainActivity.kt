@@ -8,7 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.media.MediaScannerConnection
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
@@ -18,6 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.view.get
 import androidx.lifecycle.lifecycleScope
 import com.elchinasgarov.DrawingView
@@ -207,7 +208,13 @@ class MainActivity : AppCompatActivity() {
                                 "File saved successfully : $result",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            shareImage(result)
+                            shareImage(
+                                FileProvider.getUriForFile(
+                                    baseContext,
+                                    "com.elchinasgarov.fileprovider",
+                                    file
+                                )
+                            )
                         } else {
                             Toast.makeText(
                                 this@MainActivity,
@@ -241,16 +248,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun shareImage(result: String) {
-        MediaScannerConnection.scanFile(this, arrayOf(result), null) { path, uri ->
-            val shareIntent = Intent()
-            shareIntent.action = Intent.ACTION_SEND
-            shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-            shareIntent.type = "image/png"
-            startActivity(
-                Intent.createChooser(shareIntent, "Share"))
+    private fun shareImage(uri: Uri) {
+        val shareIntent = Intent()
+        shareIntent.action = Intent.ACTION_SEND
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+        shareIntent.type = "image/png"
+        startActivity(
+            Intent.createChooser(shareIntent, "Share")
+        )
 
-        }
     }
 
 
