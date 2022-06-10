@@ -31,6 +31,7 @@ import java.io.FileOutputStream
 class MainActivity : AppCompatActivity() {
     private var drawingView: DrawingView? = null
     private var mImageButtonCurrentPaint: ImageButton? = null
+    var customProgressDialog: Dialog? = null
     val openGalleryLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK && result.data != null) {
@@ -94,17 +95,17 @@ class MainActivity : AppCompatActivity() {
         }
         val save: ImageButton = findViewById(R.id.save_btn)
         save.setOnClickListener {
-            if(isReadStorageAllowed()){
+            if (isReadStorageAllowed()) {
+                showProgressDialog()
                 lifecycleScope.launch {
-                    val flDrawingView : FrameLayout = findViewById(R.id.fl_drawing_view_container)
+                    val flDrawingView: FrameLayout = findViewById(R.id.fl_drawing_view_container)
                     saveBitmapFile(getBitmapFromView(flDrawingView))
 
-                } }
+                }
             }
-
         }
 
-
+    }
 
 
     private fun showBrushChooserDialog() {
@@ -198,6 +199,7 @@ class MainActivity : AppCompatActivity() {
                     result = file.absolutePath
 
                     runOnUiThread {
+                        cancelProgressdialog()
                         if (result.isNotEmpty()) {
                             Toast.makeText(
                                 this@MainActivity,
@@ -222,6 +224,19 @@ class MainActivity : AppCompatActivity() {
 
         }
         return result
+    }
+
+    private fun showProgressDialog() {
+        customProgressDialog = Dialog(this)
+        customProgressDialog?.setContentView(R.layout.custom_dialog_progress)
+        customProgressDialog?.show()
+    }
+
+    private fun cancelProgressdialog() {
+        if (customProgressDialog != null) {
+            customProgressDialog?.dismiss()
+            customProgressDialog = null
+        }
     }
 
 
